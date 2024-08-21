@@ -18,5 +18,13 @@ namespace api.Mappers
                 PetList = user.Pets.Select(PetMapper.ToDto).ToList()
             };
         }
+
+        public static User ToUserFromCreateDto(this CreateUserRequestDto createUserRequest){
+            return new User{
+                FirstName = createUserRequest.FirstName,
+                LastName = createUserRequest.LastName,
+                Age = createUserRequest.Age
+            };
+        }
     }
 }
