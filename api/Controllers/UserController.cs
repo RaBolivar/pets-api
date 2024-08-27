@@ -42,5 +42,36 @@ namespace api.Controllers
             _context.SaveChanges();
             return CreatedAtAction(nameof(getById), new { id = userModel.Id}, userModel.ToDto());
         }
+        
+        [HttpPut]
+        [Route("{id}")]
+        public IActionResult Update([FromRoute] int id, [FromBody] UpdateUserRequestDto userDto){
+            var userModel = _context.Users.FirstOrDefault(user => user.Id == id);
+            if (userModel == null){
+                return NotFound();
+            }
+            userModel.Age = userDto.Age;
+            userModel.FirstName = userDto.FirstName;
+            userModel.LastName = userDto.LastName;
+
+            _context.SaveChanges();
+
+            return Ok(userModel.ToDto());
+        }
+
+        [HttpDelete]
+        [Route("{id}")]
+        public IActionResult Delete([FromRoute] int id){
+            var userModel = _context.Users.FirstOrDefault(user => user.Id == id);
+            if (userModel == null){
+                return NotFound();
+            }
+            _context.Users.Remove(userModel);
+
+            _context.SaveChanges();
+
+            return NoContent();
+        }
+        
     }
 }
