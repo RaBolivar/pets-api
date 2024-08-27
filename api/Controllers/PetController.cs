@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using api.Data;
 using api.Mappers;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace api.Controllers
 {
@@ -18,9 +19,10 @@ namespace api.Controllers
             _context = context;
         }
         [HttpGet]
-        public IActionResult GetAll(){
-            var pets = _context.Pets.ToList().Select(pets => pets.ToDto());
-            return Ok(pets);
+        public async Task<IActionResult> GetAll(){
+            var pets = await _context.Pets.ToListAsync();
+            var petsDto = pets.Select(pets => pets.ToDto());
+            return Ok(petsDto);
         }
     }
 }
