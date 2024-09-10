@@ -21,14 +21,15 @@ namespace api.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll(){
-            var users = _context.Users.Include(user => user.Pets).ToList().Select(users => users.ToDto());
-            return Ok(users);
+        public async Task<IActionResult> GetAll(){
+            var users = await _context.Users.Include(user => user.Pets).ToListAsync();
+            var usersDto = users.Select(users => users.ToDto());
+            return Ok(usersDto);
         }
 
         [HttpGet("{id}")]
-        public IActionResult getById([FromRoute] int id){
-            var user = _context.Users.Include(user => user.Pets).FirstOrDefault(u => u.Id == id);
+        public async Task<IActionResult> getById([FromRoute] int id){
+            var user =  await _context.Users.Include(user => user.Pets).FirstOrDefaultAsync(u => u.Id == id);
             if(user == null){
                 return NotFound();
             }
@@ -36,11 +37,42 @@ namespace api.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create([FromBody] CreateUserRequestDto userDto){
+        public async Task<IActionResult> Create([FromBody] CreateUserRequestDto userDto){
             var userModel = userDto.ToUserFromCreateDto();
-            _context.Users.Add(userModel);
-            _context.SaveChanges();
+            await _context.Users.AddAsync(userModel);
+            await _context.SaveChangesAsync();
             return CreatedAtAction(nameof(getById), new { id = userModel.Id}, userModel.ToDto());
         }
+        
+        [HttpPut]
+        [Route("{id}")]
+        public async Task<IActionResult> Update([FromRoute] int id, [FromBody] UpdateUserRequestDto userDto){
+            var userModel = await _context.Users.FirstOrDefaultAsync(user => user.Id == id);
+            if (userModel == null){
+                return NotFound();
+            }
+            userModel.Age = userDto.Age;
+            userModel.FirstName = userDto.FirstName;
+            userModel.LastName = userDto.LastName;
+
+            await _context.SaveChangesAsync();
+
+            return Ok(userModel.ToDto());
+        }
+
+        [HttpDelete]
+        [Route("{id}")]
+        public async Task<IActionResult> Delete([FromRoute] int id){
+            var userModel = await _context.Users.FirstOrDefaultAsync(user => user.Id == id);
+            if (userModel == null){
+                return NotFound();
+            }
+            _context.Users.Remove(userModel);
+
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+        
     }
 }
