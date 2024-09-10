@@ -3,16 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace api.Models
+namespace api.Dtos.User
 {
-    public class User
+    public class CreateUserRequestDto
     {
-        public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public int Age { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
-
-        public List<Pet> Pets { get; set; } = new List<Pet>();
     }
 }
