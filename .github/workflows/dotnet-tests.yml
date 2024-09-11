@@ -20,13 +20,12 @@ jobs:
       - name: Set up .NET
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: '8.0'
+          dotnet-version: '8.x'
 
-      - name: Restore dependencies
-        run: dotnet restore
-
-      - name: Build
-        run: dotnet build --no-restore
+      - name: Clean and Build
+        run: |
+          dotnet clean
+          dotnet build --no-restore
 
       - name: Run tests
-        run: dotnet test ./Api.Tests/Api.Tests.csproj --no-build --verbosity normal
+        run: dotnet test ./Api.Tests/Api.Tests.csproj --no-build --verbosity detailed
