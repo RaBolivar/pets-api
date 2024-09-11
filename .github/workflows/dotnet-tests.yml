@@ -22,10 +22,8 @@ jobs:
         with:
           dotnet-version: '8.x'
 
-      - name: Clean and Build
-        run: |
-          dotnet clean
-          dotnet build --no-restore
+      - name: Build
+        run: dotnet build --no-restore
 
       - name: Run tests
         run: dotnet test ./Api.Tests/Api.Tests.csproj --no-build --verbosity detailed
