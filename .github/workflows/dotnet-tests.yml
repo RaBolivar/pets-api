@@ -1,4 +1,4 @@
-name: .NET Core CI
+name: Run API tests
 
 on:
   push:
@@ -22,14 +22,11 @@ jobs:
         with:
           dotnet-version: '8.x'
 
-      - name: Install dependencies
-        run: dotnet add package Newtonsoft.Json --version 12.0.1
-
       - name: Restore dependencies
-        run: dotnet restore
+        run: dotnet restore ./Api.Tests/Api.Tests.csproj
 
-      - name: Build
-        run: dotnet build --no-restore
+      - name: Build project
+        run: dotnet build ./Api.Tests/Api.Tests.csproj --no-restore
 
       - name: Run tests
-        run: dotnet test ./Api.Tests/Api.Tests.csproj --no-build --verbosity detailed
+        run: dotnet test ./Api.Tests/Api.Tests.csproj --no-build --verbosity normal
